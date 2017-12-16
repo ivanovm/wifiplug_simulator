@@ -66,6 +66,7 @@ int main() {
   bool isPlugOn = false;
 
   server.resource["^/on"]["GET"] = [&isPlugOn](shared_ptr<HttpServer::Response> response, shared_ptr<HttpServer::Request> /*request*/) {
+    std::cout << "/on" << std::endl;
     thread work_thread([response, &isPlugOn] {
         isPlugOn = true;
     });
@@ -73,6 +74,7 @@ int main() {
   };
 
   server.resource["^/off"]["GET"] = [&isPlugOn](shared_ptr<HttpServer::Response> response, shared_ptr<HttpServer::Request> /*request*/) {
+    std::cout << "/off" << std::endl;
     thread work_thread([response, &isPlugOn] {
         isPlugOn = false;
     });
@@ -82,6 +84,7 @@ int main() {
   std::string ipAddress = getPrimaryIp();
 
   server.resource["^/state"]["GET"] = [ipAddress, &isPlugOn](shared_ptr<HttpServer::Response> response, shared_ptr<HttpServer::Request> /*request*/) {
+    std::cout << "/state" << std::endl;
     thread work_thread([response, ipAddress, &isPlugOn] {
         std::string stateValue = isPlugOn ? "1" : "0";
         *response << "{id:000001,state:" << stateValue << ",ip:" << ipAddress << "}";
